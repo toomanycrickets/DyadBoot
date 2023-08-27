@@ -1,8 +1,0 @@
-exportPattern("^[[:alpha:]]+")
-export(randboot)
-export(rand)
-export(averages)
-export(histPvals)
-importFrom("graphics", "abline", "hist", "text")
-importFrom("stats", "glm", "lm", "sd", "update")
-importFrom("lme4", "glmer", "lmer")
