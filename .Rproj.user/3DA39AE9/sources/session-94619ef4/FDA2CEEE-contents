@@ -1,0 +1,90 @@
+---
+title: "Introduction to `DyadBoot`"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to `DyadBoot`}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+`DyadBoot` provides tools for dyadic random bootstrapping and analysis.
+It is indicated for experimental data involving dyads, in which effects want to 
+be explored at the individual level. 
+
+Example
+```{r data}
+#Original Data
+
+#Dyad_id	Individual	Treatment	    Body mass (g)
+#Trial1	  100	     High protein     	0.5
+#Trial1	  101	     Low protein      	0.433
+#Trial2  	102	     Low protein      	0.552
+#Trial2	  103	     High protein	      0.601
+#Trial3	  104	     High protein	      0.342
+#Trial3	  105	     Low protein	      0.56
+
+#With DyadBoot::rand or DyadBoot::randboot
+
+#Dyad_id	focal_Individual	opposite_Individual	focal_Treatment	opposite_Treatment	focal_Body_Size	opposite_Body_Size
+#Trial1	    100	                101	           High protein	     Low protein	         0.5	           0.433
+#Trial2	    102	                103	           Low protein	     High protein	         0.552	         0.601
+#Trial3	    104	                105	           High protein	     Low protein	         0.342	         0.56
+```
+
+
+Functions: 
+
+1. 'randboot' - Randomly assigns the role of "focal" and "opposite" to each individual of each dyad. Bootstrapping is then performed on the chosen model (package only supports lm, glm, lmer, and glmer so far). The random assignment of "focal" and "ooposite" roles occurs at every iteration of the bootstrapping to mitigate random sampling bias. The output (results$bootstrap_results) is string of all summary tables from each bootstrapping iteration.
+
+2. 'rand' - To only only perform the random assignment of roles without performing the bootstrapping step. Returns a dataset called "focal_opposite_data". Useful for testing model assumptions before analysis.
+
+3. 'averages' - Returns a table with the averages of all coeficients (for each tested factor) from all iterations of the bootstrapping (and standard errors of these averages).
+
+4. 'histPvals' - Returns a histogram of the distribution of all p-values for the selected factor. Text within the plot specifies the number of iterations that the selected factor had a significant p-value.
+
+
+## Installation
+
+You can install the package from GitHub using `devtools`:
+```{r setup}
+
+#install.packages("devtools")
+#devtools::install_github("toomanycrickets/DyadBoot")
+
+```
+
+1. 'randboot'
+```{r run randboot}
+#model_formula <- dependent_variable ~ independent_variable
+#results <- DyadBoot::randboot(data = data,
+#                          dyad_id_col = "dyad_id",
+ #                         model_formula = model_formula,
+  #                        model_type = "lm",
+   #                       n_bootstraps = 1000,
+    #                      focal_cols = c("dependent_variable"),
+     #                     opposite_cols = c("dependent_variable"))
+```
+
+2. 'rand'
+```{r run rand}
+#focal_opposite_data <- DyadBoot::rand(data = data, dyad_id_col = "your_dyad_column_name")
+```
+
+
+3. 'averages' (also provides standard errors of calculated averages)
+```{r averages}
+#DyadBoot::averages(results$bootstrap_results)
+
+```
+
+
+4. 'histPvals'
+```{r pvalues}
+#DyadBoot::histPvals(results$bootstrap_results, coeff_name = "your_coefficient_name")
+
+```
+
+---
