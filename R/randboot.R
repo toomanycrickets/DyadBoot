@@ -1,51 +1,60 @@
-#' Bootstrap Random Dyad Data and Model
+#' Randomized Bootstrap Function
 #'
-#' This function bootstraps dyad data by randomly assigning roles to the members
-#' of each dyad and then fits the specified model to the bootstrapped data.
+#' This function performs a randomized bootstrap analysis on dyadic data.
+#' It returns both bootstrap model results and ANOVA results.
 #'
-#' @param data A data frame containing the dyad data.
-#' @param dyad_id_col The column name in the data frame that identifies dyads.
-#' @param model_formula The formula for the model to be fit.
-#' @param model_type The type of model to be fit. This can be one of 'lm', 'glm', 'lmer', or 'glmer'.
-#' @param family For 'glm' and 'glmer' models, the family object describing the error distribution and link function.
-#' @param n_bootstraps The number of bootstrap iterations.
-#' @param focal_cols The columns in the data that pertain to the focal member of the dyad.
-#' @param opposite_cols The columns in the data that pertain to the opposite member of the dyad.
-#' @param RE_formula The random effects formula for 'lmer' and 'glmer' models.
-#' @param control A list of control parameters for 'lmer' and 'glmer' models.
-#' @param max_iterations The maximum number of iterations allowed for the bootstrap process (default is 10,000).
-#' @param max_time_seconds The maximum execution time in seconds allowed for the bootstrap process (default is 3,600 seconds or 1 hour).
+#' @param data A data frame containing the dyadic data.
+#' @param dyad_id_col A character string specifying the column name which identifies the dyad.
+#' @param model_formula A formula specifying the model to be run.
+#' @param model_type A character string specifying the type of model. One of "lm", "glm", "lmer", or "glmer".
+#' @param family A family object passed to glm or glmer, if applicable.
+#' @param n_bootstraps An integer specifying the number of bootstraps to run. Default is 1000.
+#' @param focal_cols A character vector of column names for the focal individual.
+#' @param opposite_cols A character vector of column names for the opposite individual.
+#' @param RE_formula A formula specifying the random effects, if using a mixed-effects model.
+#' @param control Control arguments passed to lmer or glmer.
+#' @param max_iterations An integer specifying the maximum number of iterations. Default is 10000.
+#' @param max_time_seconds An integer specifying the maximum execution time in seconds. Default is 3600.
 #'
-#' @return A list containing the bootstrapped model results for each iteration.
+#' @return A list containing two lists:
+#' \itemize{
+#'   \item bootstrap_results: A list of models and their summaries for each bootstrap iteration.
+#'   \item anova_results: A list of ANOVA results for each model.
+#' }
 #'
 #' @examples
 #' \dontrun{
-#' data <- data.frame(dyad_id = rep(1:50, each = 2), x = rnorm(100), y = rnorm(100))
-#' result <- randboot(data, dyad_id_col = "dyad_id", model_formula = y ~ x, model_type = "lm",
-#'                          focal_cols = "x", opposite_cols = "y")
+#' data <- data.frame(dyad_id = rep(1:10, each = 2),
+#'                    x = rnorm(20),
+#'                    y = rnorm(20))
+#' results <- randBoot(data, "dyad_id", y ~ x, model_type = "lm",
+#'                     focal_cols = "x", opposite_cols = "y")
 #' }
-#'
 #' @export
-randboot <- function(data, dyad_id_col, model_formula,
-                           model_type = "lm", family = NULL,
-                           n_bootstraps = 1000,
-                           focal_cols, opposite_cols,
-                           RE_formula = NULL, control = NULL,
-                           max_iterations = 10000, # New parameter
-                           max_time_seconds = 3600) {
+randBoot <- function(data, dyad_id_col, model_formula,
+                     model_type = "lm", family = NULL,
+                     n_bootstraps = 1000,
+                     focal_cols, opposite_cols,
+                     RE_formula = NULL, control = NULL,
+                     max_iterations = 10000, # New parameter
+                     max_time_seconds = 3600) { # New parameter: max execution time in seconds
   # ... [rest of the function code]
 }
 
-
-randboot <- function(data, dyad_id_col, model_formula,
-                           model_type = "lm", family = NULL,
-                           n_bootstraps = 1000,
-                           focal_cols, opposite_cols,
-                           RE_formula = NULL, control = NULL,
-                           max_iterations = 10000, # New parameter
-                           max_time_seconds = 3600) { # New parameter: max execution time in seconds
+randBoot <- function(data, dyad_id_col, model_formula,
+                     model_type = "lm", family = NULL,
+                     n_bootstraps = 1000,
+                     focal_cols, opposite_cols,
+                     RE_formula = NULL, control = NULL,
+                     max_iterations = 10000, # New parameter
+                     max_time_seconds = 3600) { # New parameter: max execution time in seconds
 
   start_time <- Sys.time() # Record the starting time
+
+  # Ensure the car package is loaded
+  if (!requireNamespace("car", quietly = TRUE)) {
+    stop("The 'car' package is required for Anova analysis. Please install it using install.packages('car').")
+  }
 
   # Check for valid focal_cols and opposite_cols
   if (!all(focal_cols %in% colnames(data))) {
@@ -85,6 +94,7 @@ randboot <- function(data, dyad_id_col, model_formula,
   # Bootstrap function
   bootstrap_glmp <- function(dyad_groups, n_bootstraps = 1000) {
     bootstrapped_results <- vector("list", length = n_bootstraps)
+    anova_results <- vector("list", length = n_bootstraps)
 
     iteration_count <- 0 # Initialize the iteration counter
 
@@ -100,6 +110,8 @@ randboot <- function(data, dyad_id_col, model_formula,
       }
 
       focal_opposite_data <- create_focal_opposite_data(dyad_groups)
+
+      model <- NULL  # Reset the model object for each iteration
 
       # Determine which model to run based on model_type
       if (model_type == "lm") {
@@ -126,20 +138,14 @@ randboot <- function(data, dyad_id_col, model_formula,
         stop("Invalid model_type specified. Choose 'lm', 'glm', 'lmer', or 'glmer'.")
       }
 
-      bootstrapped_results[[i]] <- list(model = model, summary = summary(model))
+      if (!is.null(model)) {
+        bootstrapped_results[[i]] <- list(model = model, summary = summary(model))
+        anova_results[[i]] <- car::Anova(model)
+      }
     }
 
-    return(bootstrapped_results)
+    return(list(bootstrap_results = bootstrapped_results, anova_results = anova_results))
   }
 
-  # Ensure warnings from underlying functions are displayed immediately
-  results <- withCallingHandlers({
-    bootstrap_glmp(dyad_groups, n_bootstraps = n_bootstraps)
-  }, warning = function(w) {
-    # Print warnings immediately
-    print(w)
-    invokeRestart("muffleWarning")
-  })
-
-  return(list(bootstrap_results = results))
+  return(bootstrap_glmp(dyad_groups, n_bootstraps))
 }

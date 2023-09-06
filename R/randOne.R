@@ -14,17 +14,17 @@
 #' @examples
 #' \dontrun{
 #' dyad_data <- data.frame(dyad_id = c(1,1,2,2), var1 = c("A", "B", "C", "D"))
-#' new_data <- rand(dyad_data, dyad_id_col = "dyad_id")
+#' new_data <- randOne(dyad_data, dyad_id_col = "dyad_id")
 #' }
 #'
 #' @export
-rand <- function(data, dyad_id_col, max_iterations = 10000) {
+randOne <- function(data, dyad_id_col, max_iterations = 10000) {
   # ... [the rest of the function code goes here]
 }
 
 
 
-rand <- function(data, dyad_id_col, max_iterations = 10000) {
+randOne <- function(data, dyad_id_col, max_iterations = 10000) {
   # Use a counter to track the number of function calls
   if (!exists(".dyad_rand_counter")) {
     .dyad_rand_counter <<- 0

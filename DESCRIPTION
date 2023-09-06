@@ -5,7 +5,7 @@ Version: 0.1.0
 Author: Ana Drago
 Maintainer: Ana Drago <adr30@st-andrews.ac.uk>
 Description: Dyad data as input, randomizes role of focal and opposite individual, performs bootstrapping on model specified by user.
-Depends: lme4
+Depends: lme4, car, ggplot2, ggdist, RColorBrewer, cowplot
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
