@@ -24,7 +24,7 @@ Original Data
       Dyad_id = c("Trial1", "Trial1", "Trial2", "Trial2", "Trial3", "Trial3"),
       Individual = c(100, 101, 102, 103, 104, 105),
       Treatment = c("High protein", "Low protein", "Low protein", "High protein", "High protein", "Low protein"),
-      `Body mass (g)` = c(0.5, 0.433, 0.552, 0.601, 0.342, 0.56)
+      Body_Size = c(0.5, 0.433, 0.552, 0.601, 0.342, 0.56)
     )
 
     kable(data)
@@ -35,7 +35,7 @@ Original Data
 <th style="text-align: left;">Dyad_id</th>
 <th style="text-align: right;">Individual</th>
 <th style="text-align: left;">Treatment</th>
-<th style="text-align: right;">Body.mass..g.</th>
+<th style="text-align: right;">Body_Size</th>
 </tr>
 </thead>
 <tbody>
