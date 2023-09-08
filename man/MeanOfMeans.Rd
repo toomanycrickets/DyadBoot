@@ -2,23 +2,30 @@
 % Please edit documentation in R/MeanOfMeans.R
 \name{MeanOfMeans}
 \alias{MeanOfMeans}
-\title{Calculate Overall Means for Each Level}
+\title{MeanOfMeans function}
 \usage{
-MeanOfMeans(all_means_df)
+MeanOfMeans(all_means_df, num_var, cat_var1, cat_var2 = NULL)
 }
 \arguments{
-\item{all_means_df}{A dataframe containing the mean values for each level of the categorical variable
-for each dataset. This dataframe is typically obtained from the \code{repDataSet} function.}
+\item{all_means_df}{A data frame containing the mean values of the numerical variable for each level (or combination of levels) of the categorical variable(s) across multiple datasets.}
+
+\item{num_var}{The name of the numerical variable as a string.}
+
+\item{cat_var1}{The name of the first categorical variable as a string.}
+
+\item{cat_var2}{The name of the second categorical variable as a string (optional).}
 }
 \value{
-A named numeric vector where names are the levels of the categorical variable and
-the values are the overall means for each level.
+A data frame containing the overall mean value(s) of the numerical variable for each level (or combination of levels) of the categorical variable(s) across all datasets.
 }
 \description{
-This function computes the overall mean for each level of the categorical variable
-using the provided dataframe that contains the means for each dataset.
+This function takes a data frame containing the mean values of a numerical variable for each level (or combination of levels)
+of one or two categorical variables across multiple datasets, and computes the overall mean value(s) across all datasets.
 }
 \examples{
-# Assuming you have the 'all_means_df' dataframe from the 'repDataSet' function:
-# overall_means_vector <- MeanOfMeans(all_means_df)
+\dontrun{
+MeanOfMeans(each_dataset_means, "dant", "Group")
+MeanOfMeans(each_dataset_means, "dant", "Group", "Song")
+}
+
 }

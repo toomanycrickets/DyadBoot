@@ -2,30 +2,36 @@
 % Please edit documentation in R/repDataSet.R
 \name{repDataSet}
 \alias{repDataSet}
-\title{Compute Means and Identify Closest Dataset}
+\title{repDataSet function}
 \usage{
-repDataSet(resultsMult, num_var, cat_var)
+repDataSet(resultsMult, num_var, cat_var1, cat_var2 = NULL)
 }
 \arguments{
-\item{resultsMult}{A list containing multiple datasets as a result of multiple iterations.}
+\item{resultsMult}{A list containing multiple datasets.}
 
-\item{num_var}{The name of the numerical variable for which means are to be calculated.}
+\item{num_var}{The name of the numerical variable as a string.}
 
-\item{cat_var}{The name of the categorical variable that defines the levels across which means are to be computed.}
+\item{cat_var1}{The name of the first categorical variable as a string.}
+
+\item{cat_var2}{The name of the second categorical variable as a string (optional).}
 }
 \value{
-A list containing:
+A list containing two elements:
 \itemize{
-  \item \code{each_dataset_means} - A dataframe containing the means for each iteration and level of the categorical variable.
-  \item \code{closest_dataset} - The dataset from the list of input datasets that has values closest to the calculated means.
+  \item each_dataset_means: A data frame containing the iteration number and the mean of the numerical variable for each level (or combination of levels) of the categorical variable(s) in each dataset.
+  \item closest_dataset: The dataset from the input list that has the mean value(s) closest to the overall mean value(s) across all datasets.
 }
 }
 \description{
-This function computes the means for a numerical variable across different levels of a categorical variable.
-Additionally, it identifies the dataset that has values closest to the calculated means.
+This function takes a list of datasets along with names of a numerical variable and one or two categorical variables.
+It computes the mean of the numerical variable for each level (or combination of levels) of the categorical variable(s)
+in each dataset. It also identifies the dataset whose mean value(s) are closest to the overall mean value(s) across
+all datasets.
 }
 \examples{
-# Assuming you have a list `results` containing multiple datasets
-# and you want to compute means for the variable 'value' across levels of 'category':
-# result_data <- repDataSet(results, "value", "category")
+\dontrun{
+repDataSet(resultsMult, "dant", "Group")
+repDataSet(resultsMult, "dant", "Group", "Song")
+}
+
 }

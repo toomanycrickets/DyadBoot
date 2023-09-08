@@ -2,48 +2,53 @@
 % Please edit documentation in R/plotBoot.R
 \name{plotBoot}
 \alias{plotBoot}
-\title{Raincloud Plot with Optional P-value Histogram}
+\title{Plot Bootstrapped Data Alongside Overall Means and p-value Histogram}
 \usage{
 plotBoot(
   closest_data,
   num_var,
-  cat_var,
+  cat_var1,
+  cat_var2 = NULL,
   overall_means,
-  xlab_name = cat_var,
+  xlab_name = cat_var1,
   ylab_name = num_var,
   main_title = NULL,
   p_values = NULL
 )
 }
 \arguments{
-\item{closest_data}{A dataframe containing the data to be plotted.}
+\item{closest_data}{A data frame containing the closest dataset obtained from bootstrapping.}
 
-\item{num_var}{The name of the numeric variable in the `closest_data` dataframe.}
+\item{num_var}{The name of the numeric variable to be plotted on the y-axis (as a string).}
 
-\item{cat_var}{The name of the categorical variable in the `closest_data` dataframe.}
+\item{cat_var1}{The name of the primary categorical variable to group the data by (as a string).}
 
-\item{overall_means}{A named vector of overall means for each level of the categorical variable.}
+\item{cat_var2}{The name of the secondary categorical variable for additional grouping (as a string). Default is NULL, indicating no secondary grouping.}
 
-\item{xlab_name}{Optional. Name of the x-axis. Defaults to the name of `cat_var`.}
+\item{overall_means}{A data frame containing the overall means calculated across all bootstrapped datasets.}
 
-\item{ylab_name}{Optional. Name of the y-axis. Defaults to the name of `num_var`.}
+\item{xlab_name}{The label for the x-axis. Default is the name of `cat_var1`.}
 
-\item{main_title}{Optional. Main title for the raincloud plot.}
+\item{ylab_name}{The label for the y-axis. Default is the name of `num_var`.}
 
-\item{p_values}{Optional. A list or vector of p-values. If provided, a histogram of the p-values
-is generated alongside the raincloud plot.}
+\item{main_title}{The main title for the plot. Default is NULL, indicating no title.}
+
+\item{p_values}{A list of p-values to be plotted as a histogram alongside the raincloud plot. Default is NULL, indicating no p-value histogram.}
 }
 \value{
-A ggplot2 plot object. If `p_values` are provided, the returned plot will include
-both the raincloud plot and the p-value histogram side by side.
+A ggplot object representing the multi-part plot. If `p_values` is provided, the plot includes both the raincloud plot and the p-value histogram. Otherwise, only the raincloud plot is returned.
 }
 \description{
-This function generates a raincloud plot of the provided data. If p-values are also
-provided, it generates an additional histogram of the p-values alongside the raincloud plot.
+This function takes in a dataset of bootstrapped data along with calculated overall means and optionally a list of p-values,
+and generates a multi-part plot that includes a raincloud plot of the data, black and grey points representing the overall means,
+and optionally a histogram of the p-values. The raincloud plot is a combination of a box plot, a half-violin plot (from the ggdist package),
+and individual data points. The color aesthetic of the plot is mapped to the levels of a categorical variable, and the plot can
+accommodate a secondary categorical variable for additional grouping.
 }
 \examples{
 \dontrun{
-plotBoot(df, "numeric_var", "categorical_var", overall_means = means_vec, p_values = pvals)
+plotBoot(closest_data = your_data, num_var = "variable1", cat_var1 = "variable2",
+         overall_means = your_overall_means, p_values = your_p_values)
 }
 
 }
