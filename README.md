@@ -734,13 +734,13 @@ Install the package from GitHub using `devtools`:
 
     DyadBoot::histPvals(results$bootstrap_results, coeff_name = "focal_groupC:focal_songY")
 
-![](DyadBoot_vignette_files/figure-markdown_strict/unnamed-chunk-21-1.png)
+![](vignettes/DyadBoot_vignette_files/figure-markdown_strict/unnamed-chunk-20-1.png)
 
     plot1<-DyadBoot::plotBoot(rep_data$closest_data, "focal_dant", "focal_group", "focal_song", overall_means = overall_means, 
                               xlab_name = "Genotype Group", ylab_name = "Focal Duration of Antennal Contact (s)", main_title = NULL, p_values = pvals)
 
     plot1 #to generate plot
 
-![](DyadBoot_vignette_files/figure-markdown_strict/unnamed-chunk-22-1.png)
+![](vignettes/DyadBoot_vignette_files/figure-markdown_strict/unnamed-chunk-21-1.png)
 
 ------------------------------------------------------------------------
