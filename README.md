@@ -661,11 +661,11 @@ histPvals - From summary() or car::Anova() output
 
     DyadBoot::histPvals(results$bootstrap_results, coeff_name = "focal_GenotypeB:focal_Song_occurrenceYes", "Summary")
 
-![](DyadBoot_vignette_files/figure-markdown_strict/unnamed-chunk-17-1.png)
+![](vignettes/DyadBoot_vignette_files/figure-markdown_strict/unnamed-chunk-17-1.png)
 
     DyadBoot::histPvals(results$anova_results, coeff_name = "focal_Genotype:focal_Song_occurrence", "Anova")
 
-![](DyadBoot_vignette_files/figure-markdown_strict/unnamed-chunk-17-2.png)
+![](vignettes/DyadBoot_vignette_files/figure-markdown_strict/unnamed-chunk-17-2.png)
 
 From car::Anova() function
 
@@ -689,10 +689,15 @@ From car::Anova() function
     ## 
     ## [[6]]
     ## [1] 0.0003735079
+    
 
     resultsMult <- DyadBoot::randMult(mydata, dyad_id_col = "Trial_ID", num_iterations = 1000)
 
+    
+
     rep_data<- DyadBoot::repDataSet(resultsMult, "focal_Aggression_Duration", "focal_Genotype", "focal_Song_occurrence")
+
+
 
     head(rep_data$closest_data) #access most representative dataset
 
@@ -744,7 +749,8 @@ Without p-values
 
     plot #to generate plot
 
-![](DyadBoot_vignette_files/figure-markdown_strict/unnamed-chunk-22-1.png)
+![](vignettes/DyadBoot_vignette_files/figure-markdown_strict/unnamed-chunk-22-1.png)
+
 
 With p-values - use either plotBoot or plotBoot1 (width parameters
 differ)
