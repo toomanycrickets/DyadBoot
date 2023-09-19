@@ -150,10 +150,15 @@ histMeans(each_dataset_means, numerical_variable, categorical_variable, level) #
 
 ------------------------------------------------------------------------
 
-9.  'histPvals' - Histogram of the distribution of all p-values for the selected factor. Text within the plot specifies the number of iterations that the selected factor had a significant p-value.
+9.  'histPvals' - Histogram of the distribution of all p-values for the selected factor. Chose either the output from the summary function or the Anova function. Text within the plot specifies the number of iterations that the selected factor had a significant p-value.
 
 ```{r eval=FALSE}
-DyadBoot::histPvals(results$bootstrap_results, coeff_name = "your_coefficient_name")
+
+# Using summary function output
+DyadBoot::histPvals(results$bootstrap_results, "your_coefficient_name", "Summary")
+
+# Using Anova function output
+DyadBoot::histPvals(results$bootstrap_results, "your_coefficient_name", "Anova")
 ```
 
 ------------------------------------------------------------------------
