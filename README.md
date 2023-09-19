@@ -269,13 +269,17 @@ Install the package from GitHub using `devtools`:
 ------------------------------------------------------------------------
 
 1.  ‘histPvals’ - Histogram of the distribution of all p-values for the
-    selected factor. Text within the plot specifies the number of
+    selected factor, chose to either use the summary() or Anova() output.
+    Text within the plot specifies the number of
     iterations that the selected factor had a significant p-value.
 
 <!-- -->
+# Using output from summary function
+    DyadBoot::histPvals(results$bootstrap_results, "your_coefficient_name", "Summary")
 
-    DyadBoot::histPvals(results$bootstrap_results, coeff_name = "your_coefficient_name")
+# Using output from Anova function
 
+    DyadBoot::histPvals(results$anova_results, "your_coefficient_name", "Anova")
 ------------------------------------------------------------------------
 
 1.  -   ‘plotBoot’ - Two grid plot. Left grid -raincloud plot (with
