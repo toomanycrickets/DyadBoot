@@ -273,12 +273,12 @@ Install the package from GitHub using `devtools`:
     Text within the plot specifies the number of
     iterations that the selected factor had a significant p-value.
 
+Using output from summary function
 <!-- -->
-# Using output from summary function
     DyadBoot::histPvals(results$bootstrap_results, "your_coefficient_name", "Summary")
 
-# Using output from Anova function
-
+Using output from Anova function
+<!-- -->
     DyadBoot::histPvals(results$anova_results, "your_coefficient_name", "Anova")
 ------------------------------------------------------------------------
 
