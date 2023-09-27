@@ -74,7 +74,7 @@ histPvals <- function(bootstrap_results, coeff_name, output_type, max_iterations
 
   # Plot a histogram of the p-values
   hist_info <- hist(pvalues, breaks = seq(0, 1, by = 0.05), main = paste("Histogram of p-values for", coeff_name),
-                    xlab = "p-value", ylab = "Frequency", col = "lightblue", border = "black")
+                    xlab = "p-value", ylab = "Frequency", col = "#44A2B0", border = "black")
   # Add a dashed vertical line at x = 0.05
   abline(v = 0.05, lty = 2, col = "red")
   # Determine the number of iterations with p < 0.05
