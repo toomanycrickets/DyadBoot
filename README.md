@@ -13,8 +13,9 @@ want to be explored at the individual level. Input dataframe must be
 strucutred so that each row pertains to one individual of the dyad 
 (individuals of the same dyad must be in adjacent rows), and there must 
 be one column specifying the Dyad name/ID (e.g. “Dyad_id”). Functions randBoot, 
-randOne, and randMult, restructure the dataframe so that there is one row per dyad,
+randOne, and randMult, restructures the dataframe so that there is one row per dyad,
 with separate columns for the variables associated with each individual in the dyad.
+Role of "focal" and "opposite" are randomly attributed each individual of the dyad. randOne performs this once, while randBoot and randMult perform this the number of times specified by the user. randOne and randMult simply generate the new dataframe(s) while randBoot runs a specified model on each generated dataframe.
 
 Example provided below:
 
