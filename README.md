@@ -1,6 +1,8 @@
 # DyadBoot
 
-R package that provides tools for analysing experimental dyad data at the individual level. Randomly assigns the role of "focal" or "opposite" to each individual of each dyad. Performs bootstrapping of chosen model (so far only supports lm, glm, lmer, and glmer), reassigning the "focal" and "opposite" roles at each iteration of the bootstrapping to mitigate sampling bias. Output contains summary tables and Anova tables ('car' package) of all bootstapping iterations. Includes other functions for summary statistics and plotting capabilites (read vignette).
+DyadBoot is an R package that provides tools for analysing experimental dyad data at the individual level.  Randomly assigns the role of "focal" or "opposite" to each individual of each dyad. Performs bootstrapping of chosen model (so far only supports lm, glm, lmer, and glmer), reassigning the "focal" and "opposite" roles at each iteration of the bootstrapping to mitigate sampling bias. Output contains summary tables and Anova tables ('car' package) of all bootstapping iterations. Includes other functions for summary statistics and plotting capabilites (read vignette). ChatGPT-4 was used to generalise original functions in this package.
+
+
 
 <img src="./images/imageee3.png" width="150" height="150">
 
@@ -8,10 +10,13 @@ R package that provides tools for analysing experimental dyad data at the indivi
 
 `DyadBoot` provides tools for dyadic random bootstrapping and analysis.
 It is indicated for experimental data involving dyads, in which effects
-want to be explored at the individual level. It is important to note
-that it requires 1) there to be a column pertaining to the Dyad
-(e.g. “Dyad\_id”), 2) that each invidual is on a different row, and 3)
-for individuals belonging to the same dyad to be in adjecent rows.
+want to be explored at the individual level. Input dataframe must be 
+strucutred so that each row pertains to one individual of the dyad 
+(individuals of the same dyad must be in adjacent rows), and there must 
+be one column specifying the Dyad name/ID (e.g. “Dyad_id”). Functions randBoot, 
+randOne, and randMult, restructure the dataframe so that there is one row per dyad,
+with separate columns for the variables associated with each individual in the dyad.
+
 Example provided below:
 
 -Example-
@@ -350,6 +355,7 @@ Using output from Anova function
     #opposite_cols = c("aggression"))
 
     head(results$bootstrap_results) #for list of all summary(model) performed in the bootstrapping
+    head(results$bootstrap_results[[1]]) # here we'll only visualise one row
 
     ## [[1]]
     ## [[1]]$model
@@ -385,193 +391,10 @@ Using output from Anova function
     ## Residual standard error: 28.05 on 46 degrees of freedom
     ## Multiple R-squared:  0.8724, Adjusted R-squared:  0.864 
     ## F-statistic: 104.8 on 3 and 46 DF,  p-value: < 2.2e-16
-    ## 
-    ## 
-    ## 
-    ## [[2]]
-    ## [[2]]$model
-    ## 
-    ## Call:
-    ## lm(formula = model_formula, data = focal_opposite_data)
-    ## 
-    ## Coefficients:
-    ##                              (Intercept)                           focal_GenotypeB  
-    ##                                   198.75                                   -135.72  
-    ##                 focal_Song_occurrenceYes  focal_GenotypeB:focal_Song_occurrenceYes  
-    ##                                    47.26                                     65.45  
-    ## 
-    ## 
-    ## [[2]]$summary
-    ## 
-    ## Call:
-    ## lm(formula = model_formula, data = focal_opposite_data)
-    ## 
-    ## Residuals:
-    ##     Min      1Q  Median      3Q     Max 
-    ## -57.207 -21.768   5.059  20.087  48.038 
-    ## 
-    ## Coefficients:
-    ##                                          Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)                               198.748      7.611  26.114  < 2e-16 ***
-    ## focal_GenotypeB                          -135.722     11.005 -12.333 3.45e-16 ***
-    ## focal_Song_occurrenceYes                   47.260     10.068   4.694 2.44e-05 ***
-    ## focal_GenotypeB:focal_Song_occurrenceYes   65.454     15.091   4.337 7.80e-05 ***
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## Residual standard error: 26.36 on 46 degrees of freedom
-    ## Multiple R-squared:  0.8754, Adjusted R-squared:  0.8672 
-    ## F-statistic: 107.7 on 3 and 46 DF,  p-value: < 2.2e-16
-    ## 
-    ## 
-    ## 
-    ## [[3]]
-    ## [[3]]$model
-    ## 
-    ## Call:
-    ## lm(formula = model_formula, data = focal_opposite_data)
-    ## 
-    ## Coefficients:
-    ##                              (Intercept)                           focal_GenotypeB  
-    ##                                   204.52                                   -148.36  
-    ##                 focal_Song_occurrenceYes  focal_GenotypeB:focal_Song_occurrenceYes  
-    ##                                    42.09                                     59.64  
-    ## 
-    ## 
-    ## [[3]]$summary
-    ## 
-    ## Call:
-    ## lm(formula = model_formula, data = focal_opposite_data)
-    ## 
-    ## Residuals:
-    ##     Min      1Q  Median      3Q     Max 
-    ## -51.474 -24.128   6.081  25.122  49.751 
-    ## 
-    ## Coefficients:
-    ##                                          Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)                               204.524      9.248  22.116  < 2e-16 ***
-    ## focal_GenotypeB                          -148.361     12.803 -11.588 3.06e-15 ***
-    ## focal_Song_occurrenceYes                   42.087     12.175   3.457  0.00119 ** 
-    ## focal_GenotypeB:focal_Song_occurrenceYes   59.644     17.465   3.415  0.00134 ** 
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## Residual standard error: 30.67 on 46 degrees of freedom
-    ## Multiple R-squared:  0.8566, Adjusted R-squared:  0.8472 
-    ## F-statistic: 91.56 on 3 and 46 DF,  p-value: < 2.2e-16
-    ## 
-    ## 
-    ## 
-    ## [[4]]
-    ## [[4]]$model
-    ## 
-    ## Call:
-    ## lm(formula = model_formula, data = focal_opposite_data)
-    ## 
-    ## Coefficients:
-    ##                              (Intercept)                           focal_GenotypeB  
-    ##                                   195.48                                   -142.38  
-    ##                 focal_Song_occurrenceYes  focal_GenotypeB:focal_Song_occurrenceYes  
-    ##                                    54.28                                     71.27  
-    ## 
-    ## 
-    ## [[4]]$summary
-    ## 
-    ## Call:
-    ## lm(formula = model_formula, data = focal_opposite_data)
-    ## 
-    ## Residuals:
-    ##     Min      1Q  Median      3Q     Max 
-    ## -48.107 -18.221   2.307  19.109  48.799 
-    ## 
-    ## Coefficients:
-    ##                                          Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)                               195.482      8.691  22.493  < 2e-16 ***
-    ## focal_GenotypeB                          -142.382     11.560 -12.317 3.61e-16 ***
-    ## focal_Song_occurrenceYes                   54.284     11.220   4.838 1.51e-05 ***
-    ## focal_GenotypeB:focal_Song_occurrenceYes   71.267     15.714   4.535 4.10e-05 ***
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## Residual standard error: 27.48 on 46 degrees of freedom
-    ## Multiple R-squared:  0.8898, Adjusted R-squared:  0.8826 
-    ## F-statistic: 123.8 on 3 and 46 DF,  p-value: < 2.2e-16
-    ## 
-    ## 
-    ## 
-    ## [[5]]
-    ## [[5]]$model
-    ## 
-    ## Call:
-    ## lm(formula = model_formula, data = focal_opposite_data)
-    ## 
-    ## Coefficients:
-    ##                              (Intercept)                           focal_GenotypeB  
-    ##                                   203.93                                   -147.17  
-    ##                 focal_Song_occurrenceYes  focal_GenotypeB:focal_Song_occurrenceYes  
-    ##                                    45.94                                     65.77  
-    ## 
-    ## 
-    ## [[5]]$summary
-    ## 
-    ## Call:
-    ## lm(formula = model_formula, data = focal_opposite_data)
-    ## 
-    ## Residuals:
-    ##     Min      1Q  Median      3Q     Max 
-    ## -58.390 -24.142   0.362  22.299  46.493 
-    ## 
-    ## Coefficients:
-    ##                                          Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)                               203.933      8.102  25.169  < 2e-16 ***
-    ## focal_GenotypeB                          -147.167     12.288 -11.977 9.72e-16 ***
-    ## focal_Song_occurrenceYes                   45.936     11.695   3.928 0.000285 ***
-    ## focal_GenotypeB:focal_Song_occurrenceYes   65.766     16.704   3.937 0.000277 ***
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## Residual standard error: 29.21 on 46 degrees of freedom
-    ## Multiple R-squared:  0.8477, Adjusted R-squared:  0.8378 
-    ## F-statistic: 85.37 on 3 and 46 DF,  p-value: < 2.2e-16
-    ## 
-    ## 
-    ## 
-    ## [[6]]
-    ## [[6]]$model
-    ## 
-    ## Call:
-    ## lm(formula = model_formula, data = focal_opposite_data)
-    ## 
-    ## Coefficients:
-    ##                              (Intercept)                           focal_GenotypeB  
-    ##                                   204.24                                   -151.69  
-    ##                 focal_Song_occurrenceYes  focal_GenotypeB:focal_Song_occurrenceYes  
-    ##                                    42.35                                     67.78  
-    ## 
-    ## 
-    ## [[6]]$summary
-    ## 
-    ## Call:
-    ## lm(formula = model_formula, data = focal_opposite_data)
-    ## 
-    ## Residuals:
-    ##     Min      1Q  Median      3Q     Max 
-    ## -52.372 -23.722   3.637  21.906  50.072 
-    ## 
-    ## Coefficients:
-    ##                                          Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)                                204.24       9.76  20.926  < 2e-16 ***
-    ## focal_GenotypeB                           -151.69      12.98 -11.684  2.3e-15 ***
-    ## focal_Song_occurrenceYes                    42.35      12.60   3.361 0.001570 ** 
-    ## focal_GenotypeB:focal_Song_occurrenceYes    67.78      17.65   3.841 0.000374 ***
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## Residual standard error: 30.86 on 46 degrees of freedom
-    ## Multiple R-squared:  0.8644, Adjusted R-squared:  0.8556 
-    ## F-statistic: 97.76 on 3 and 46 DF,  p-value: < 2.2e-16
+    
 
     head(results$anova_results) #for list of all car::Anova(model) performed in the bootstrapping
+    head(results$anova_results[[1]]) # here we'll only visualise one row
 
     ## [[1]]
     ## Anova Table (Type II tests)
@@ -584,66 +407,7 @@ Using output from Anova function
     ## Residuals                             36191 46                      
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## [[2]]
-    ## Anova Table (Type II tests)
-    ## 
-    ## Response: focal_Aggression_Duration
-    ##                                      Sum Sq Df F value    Pr(>F)    
-    ## focal_Genotype                       124828  1 179.587 < 2.2e-16 ***
-    ## focal_Song_occurrence                 72114  1 103.749 2.260e-13 ***
-    ## focal_Genotype:focal_Song_occurrence  13075  1  18.811 7.805e-05 ***
-    ## Residuals                             31974 46                      
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## [[3]]
-    ## Anova Table (Type II tests)
-    ## 
-    ## Response: focal_Aggression_Duration
-    ##                                      Sum Sq Df F value    Pr(>F)    
-    ## focal_Genotype                       167825  1 178.398 < 2.2e-16 ***
-    ## focal_Song_occurrence                 62364  1  66.293 1.827e-10 ***
-    ## focal_Genotype:focal_Song_occurrence  10972  1  11.663  0.001342 ** 
-    ## Residuals                             43274 46                      
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## [[4]]
-    ## Anova Table (Type II tests)
-    ## 
-    ## Response: focal_Aggression_Duration
-    ##                                      Sum Sq Df F value    Pr(>F)    
-    ## focal_Genotype                       132766  1 175.782 < 2.2e-16 ***
-    ## focal_Song_occurrence                100505  1 133.069 3.577e-15 ***
-    ## focal_Genotype:focal_Song_occurrence  15536  1  20.569 4.102e-05 ***
-    ## Residuals                             34743 46                      
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## [[5]]
-    ## Anova Table (Type II tests)
-    ## 
-    ## Response: focal_Aggression_Duration
-    ##                                      Sum Sq Df F value    Pr(>F)    
-    ## focal_Genotype                       153359  1 179.694 < 2.2e-16 ***
-    ## focal_Song_occurrence                 74801  1  87.646 3.174e-12 ***
-    ## focal_Genotype:focal_Song_occurrence  13230  1  15.502 0.0002772 ***
-    ## Residuals                             39258 46                      
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## [[6]]
-    ## Anova Table (Type II tests)
-    ## 
-    ## Response: focal_Aggression_Duration
-    ##                                      Sum Sq Df F value    Pr(>F)    
-    ## focal_Genotype                       162945  1 171.045 < 2.2e-16 ***
-    ## focal_Song_occurrence                 72398  1  75.997 2.649e-11 ***
-    ## focal_Genotype:focal_Song_occurrence  14053  1  14.752 0.0003735 ***
-    ## Residuals                             43821 46                      
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    
 
     DyadBoot::averages(results$bootstrap_results)
 
