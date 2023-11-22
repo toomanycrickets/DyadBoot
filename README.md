@@ -23,16 +23,6 @@ Example provided below:
 
 Original Data
 
-    library(knitr)
-
-    data <- data.frame(
-      Dyad_id = c("Trial1", "Trial1", "Trial2", "Trial2", "Trial3", "Trial3"),
-      Individual = c(100, 101, 102, 103, 104, 105),
-      Treatment = c("High protein", "Low protein", "Low protein", "High protein", "High protein", "Low protein"),
-      Body_Size = c(0.5, 0.433, 0.552, 0.601, 0.342, 0.56)
-    )
-
-    kable(data)
 
 <table>
 <thead>
@@ -85,19 +75,6 @@ Original Data
 
 With DyadBoot::randOne, DyadBoot::randMult or DyadBoot::randBoot
 
-    library(knitr)
-
-    data <- data.frame(
-      Dyad_id = c("Trial1", "Trial2", "Trial3"),
-      focal_Individual = c(100, 102, 104),
-      opposite_Individual = c(101, 103, 105),
-      focal_Treatment = c("High protein", "Low protein", "High protein"),
-      opposite_Treatment = c("Low protein", "High protein", "Low protein"),
-      focal_Body_Size = c(0.5, 0.552, 0.342),
-      opposite_Body_Size = c(0.433, 0.601, 0.56)
-    )
-
-    kable(data)
 
 <table>
 <colgroup>
