@@ -8,8 +8,7 @@ DyadBoot is an R package that provides tools for analysing experimental dyad dat
 
 ## Introduction
 
-`DyadBoot` provides tools for dyadic random bootstrapping and analysis.
-It is indicated for experimental data involving dyads, in which effects
+`DyadBoot` is indicated for experimental data involving dyads, in which effects
 want to be explored at the individual level. Input dataframe must be 
 strucutred so that each row pertains to one individual of the dyad 
 (individuals of the same dyad must be in adjacent rows), and there must 
