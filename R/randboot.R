@@ -35,7 +35,6 @@ randBoot <- function(data, dyad_id_col, model_formula,
                      model_type = "lm", family = NULL,
                      n_bootstraps = 1000,
                      focal_cols, opposite_cols,
-                     RE_formula = NULL, control = NULL,
                      max_iterations = 10000, # New parameter
                      max_time_seconds = 3600) { # New parameter: max execution time in seconds
   # ... [rest of the function code]
@@ -45,7 +44,6 @@ randBoot <- function(data, dyad_id_col, model_formula,
                      model_type = "lm", family = NULL,
                      n_bootstraps = 1000,
                      focal_cols, opposite_cols,
-                     RE_formula = NULL, control = NULL,
                      max_iterations = 10000, # New parameter
                      max_time_seconds = 3600) { # New parameter: max execution time in seconds
 
@@ -123,17 +121,13 @@ randBoot <- function(data, dyad_id_col, model_formula,
         if (!requireNamespace("lme4", quietly = TRUE)) {
           stop("The 'lme4' package is required for mixed-effects models. Please install it using install.packages('lme4').")
         }
-        if (is.null(RE_formula)) stop("Please specify random effects for the lmer model.")
-        full_formula <- update(model_formula, . ~ . + (RE_formula))
-        model <- lme4::lmer(full_formula, data = focal_opposite_data, control = control)
+        model <- lme4::lmer(model_formula, data = focal_opposite_data)
       } else if (model_type == "glmer") {
         if (!requireNamespace("lme4", quietly = TRUE)) {
           stop("The 'lme4' package is required for mixed-effects models. Please install it using install.packages('lme4').")
         }
         if (is.null(family)) stop("Please specify a family for the glmer model.")
-        if (is.null(RE_formula)) stop("Please specify random effects for the glmer model.")
-        full_formula <- update(model_formula, . ~ . + (RE_formula))
-        model <- lme4::glmer(full_formula, data = focal_opposite_data, family = family, control = control)
+        model <- lme4::glmer(model_formula, data = focal_opposite_data, family = family)
       } else {
         stop("Invalid model_type specified. Choose 'lm', 'glm', 'lmer', or 'glmer'.")
       }
