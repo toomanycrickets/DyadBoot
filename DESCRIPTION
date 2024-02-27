@@ -1,7 +1,7 @@
 Package: DyadBoot
 Type: Package
 Title: Bootstrapping on randomised dyad data
-Version: 0.1.0
+Version: 1.0.0
 Author: Ana Drago
 Maintainer: Ana Drago <adr30@st-andrews.ac.uk>
 Description: Dyad data as input, randomizes role of focal and opposite individual, performs bootstrapping on model specified by user.
