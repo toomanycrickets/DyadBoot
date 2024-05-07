@@ -112,34 +112,39 @@ randBoot <- function(data, dyad_id_col, model_formula,
       model <- NULL  # Reset the model object for each iteration
 
       # Determine which model to run based on model_type
-      if (model_type == "lm") {
-        model <- lm(model_formula, data = focal_opposite_data)
-      } else if (model_type == "glm") {
-        if (is.null(family)) stop("Please specify a family for the glm model.")
-        model <- glm(model_formula, data = focal_opposite_data, family = family)
-      } else if (model_type == "lmer") {
-        if (!requireNamespace("lme4", quietly = TRUE)) {
-          stop("The 'lme4' package is required for mixed-effects models. Please install it using install.packages('lme4').")
-        }
-        model <- lme4::lmer(model_formula, data = focal_opposite_data)
-      } else if (model_type == "glmer") {
-        if (!requireNamespace("lme4", quietly = TRUE)) {
-          stop("The 'lme4' package is required for mixed-effects models. Please install it using install.packages('lme4').")
-        }
-        if (is.null(family)) stop("Please specify a family for the glmer model.")
-        model <- lme4::glmer(model_formula, data = focal_opposite_data, family = family)
-      } else {
-        stop("Invalid model_type specified. Choose 'lm', 'glm', 'lmer', or 'glmer'.")
+    if (model_type == "lm") {
+      model <- lm(model_formula, data = focal_opposite_data)
+    } else if (model_type == "glm") {
+      if (is.null(family)) stop("Please specify a family for the glm model.")
+      model <- glm(model_formula, data = focal_opposite_data, family = family)
+    } else if (model_type == "lmer") {
+      if (!requireNamespace("lme4", quietly = TRUE)) {
+        stop("The 'lme4' package is required for mixed-effects models. Please install it using install.packages('lme4').")
       }
-
-      if (!is.null(model)) {
-        bootstrapped_results[[i]] <- list(model = model, summary = summary(model))
-        anova_results[[i]] <- car::Anova(model)
+      model <- lme4::lmer(model_formula, data = focal_opposite_data)
+    } else if (model_type == "glm.nb") {
+      if (!requireNamespace("MASS", quietly = TRUE)) {
+        stop("The 'MASS' package is required for mixed-effects models. Please install it using install.packages('lme4').")
       }
+      model <- MASS::glm.nb(model_formula, data = focal_opposite_data)
+    } else if (model_type == "glmer") {
+      if (!requireNamespace("lme4", quietly = TRUE)) {
+        stop("The 'lme4' package is required for mixed-effects models. Please install it using install.packages('lme4').")
+      }
+      if (is.null(family)) stop("Please specify a family for the glmer model.")
+      model <- lme4::glmer(model_formula, data = focal_opposite_data, family = family)
+    } else {
+      stop("Invalid model_type specified. Choose 'lm', 'glm', 'lmer', or 'glmer'.")
     }
-
-    return(list(bootstrap_results = bootstrapped_results, anova_results = anova_results))
+    
+    if (!is.null(model)) {
+      bootstrapped_results[[i]] <- list(model = model, summary = summary(model))
+      anova_results[[i]] <- car::Anova(model)
+    }
   }
+  
+  return(list(bootstrap_results = bootstrapped_results, anova_results = anova_results))
+}
 
-  return(bootstrap_glmp(dyad_groups, n_bootstraps))
+return(bootstrap_glmp(dyad_groups, n_bootstraps))
 }
