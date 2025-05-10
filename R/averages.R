@@ -1,79 +1,75 @@
-#' Calculate Averages and Standard Errors from Bootstrap Results
+#' Calculate Averages and Standard Errors from Bootstrap Results or Anova Tables
 #'
-#' This function calculates the averages and standard errors of coefficients from the results of bootstrapped models.
+#' This function calculates the averages and standard errors of coefficients or test statistics
+#' from the results of bootstrapped models. It supports both model summaries (e.g., from `summary(lm())`)
+#' and Analysis of Deviance tables (e.g., from `car::Anova()`).
 #'
-#' @param bootstrap_results A list of model summaries obtained from bootstrapping.
-#' @param max_iterations An integer specifying the maximum number of iterations allowed in the function. This helps in preventing infinite recursion. Default is set to 10000.
+#' @param bootstrap_results A list of model summaries or Anova tables obtained from bootstrapping.
+#' @param max_iterations An integer specifying the maximum number of iterations allowed in the function. This helps in preventing infinite recursion. Default is 10000.
 #'
-#' @return A list containing two matrices: 'averages' with the average values of the coefficients and 'standard_errors' with the standard errors of the coefficients.
-#' @export
-#'
+#' @return A list containing two matrices: 'averages' with the average values of the coefficients or test statistics,
+#' and 'standard_errors' with the corresponding standard errors.
+#' 
 #' @examples
 #' \dontrun{
+#' # For bootstrapped model summaries
 #' data <- data.frame(y = rnorm(100), x = rnorm(100))
 #' results <- bootstrap_lm(data, y ~ x, 100)
+#' avg_se <- averages(results$bootstrap_results)
+#'
+#' # For bootstrapped Anova results
+#' results <- list()
+#' for (i in 1:1000) {
+#'   model <- glm(y ~ x1 * x2, data = some_data, family = binomial)
+#'   results[[i]] <- car::Anova(model, type = 2)
+#' }
 #' avg_se <- averages(results)
 #' }
-averages <- function(bootstrap_results, max_iterations = 10000) {
-  # ... [rest of the function code]
-}
-
-
+#'
+#' @export
 averages <- function(bootstrap_results, max_iterations = 10000) {
 
-  # Helper function to extract the coefficients from a model summary
-  extract_coefficients <- function(model_summary) {
-    return(model_summary$coefficients)
-  }
+  # Detect input type: summary coefficients vs Anova tables
+  is_anova <- all(sapply(bootstrap_results, function(x)
+    inherits(x, "anova") || all(c("LR Chisq", "Pr(>Chisq)") %in% colnames(x))))
 
-  # Helper function to compute standard error for each coefficient metric
-  compute_se_coefficients <- function(coeff_lists, coeff_names, metrics_names) {
-    se_matrix <- matrix(0, nrow = length(coeff_names), ncol = length(metrics_names))
-    rownames(se_matrix) <- coeff_names
-    colnames(se_matrix) <- metrics_names
-
-    for (coeff in coeff_names) {
-      for (metric in metrics_names) {
-        iteration <- 0
-        values <- sapply(coeff_lists, function(x) {
-          iteration <<- iteration + 1
-          if(iteration > max_iterations) stop("Maximum iterations reached!")
-          return(x[coeff, metric])
-        })
-        se_matrix[coeff, metric] <- sd(values, na.rm = TRUE) / sqrt(length(values))
-      }
-    }
-
-    return(se_matrix)
-  }
-
-  # Extract full coefficient tables from each summary and store them in a list
-  coeff_lists <- lapply(bootstrap_results, function(res) {
-    return(extract_coefficients(res$summary))
-  })
-
-  # Infer the coefficient names and metrics names from the first bootstrap result
-  coeff_names <- rownames(coeff_lists[[1]])
-  metrics_names <- colnames(coeff_lists[[1]])
-
-  # Create matrices to store averages and SE
-  average_matrix <- matrix(0, nrow = length(coeff_names), ncol = length(metrics_names))
-  se_matrix <- matrix(0, nrow = length(coeff_names), ncol = length(metrics_names))
-
-  rownames(average_matrix) <- coeff_names
-  colnames(average_matrix) <- metrics_names
-  rownames(se_matrix) <- coeff_names
-  colnames(se_matrix) <- metrics_names
-
-  # Populate the average_matrix with average values
-  for (coeff in coeff_names) {
-    for (metric in metrics_names) {
-      average_matrix[coeff, metric] <- mean(sapply(coeff_lists, function(x) x[coeff, metric]), na.rm = TRUE)
+  # Generalized extractor: extracts the matrix from either type
+  extract_matrix <- function(result) {
+    if (is_anova) {
+      return(result)
+    } else {
+      return(result$summary$coefficients)
     }
   }
 
-  # Populate the se_matrix with standard error values
-  se_matrix <- compute_se_coefficients(coeff_lists, coeff_names, metrics_names)
+  # Extract all term/statistic tables
+  term_lists <- lapply(bootstrap_results, function(res) extract_matrix(res))
+
+  # Infer row and column names from the first iteration
+  term_names <- rownames(term_lists[[1]])
+  metric_names <- colnames(term_lists[[1]])
+
+  # Initialize matrices for output
+  average_matrix <- matrix(0, nrow = length(term_names), ncol = length(metric_names))
+  se_matrix <- matrix(0, nrow = length(term_names), ncol = length(metric_names))
+  rownames(average_matrix) <- term_names
+  colnames(average_matrix) <- metric_names
+  rownames(se_matrix) <- term_names
+  colnames(se_matrix) <- metric_names
+
+  # Fill the average and SE matrices
+  for (term in term_names) {
+    for (metric in metric_names) {
+      iteration <- 0
+      values <- sapply(term_lists, function(x) {
+        iteration <<- iteration + 1
+        if (iteration > max_iterations) stop("Maximum iterations reached!")
+        return(x[term, metric])
+      })
+      average_matrix[term, metric] <- mean(values, na.rm = TRUE)
+      se_matrix[term, metric] <- sd(values, na.rm = TRUE) / sqrt(sum(!is.na(values)))
+    }
+  }
 
   return(list(averages = average_matrix, standard_errors = se_matrix))
 }
