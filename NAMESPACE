@@ -1,4 +1,3 @@
-exportPattern("^[[:alpha:]]+")
 export(randBoot)
 export(randOne)
 export(randMult)
