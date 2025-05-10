@@ -2,25 +2,46 @@
 % Please edit documentation in R/averages.R
 \name{averages}
 \alias{averages}
-\title{Calculate Averages and Standard Errors from Bootstrap Results}
+\title{Calculate Averages and Standard Errors from Bootstrap Results or Anova Tables}
+\description{
+This function calculates the averages and standard errors of coefficients or test statistics
+from the results of bootstrapped models. It supports both model summaries (e.g., from \code{summary(lm())})
+and Analysis of Deviance tables (e.g., from \code{car::Anova()}).
+}
 \usage{
 averages(bootstrap_results, max_iterations = 10000)
 }
 \arguments{
-\item{bootstrap_results}{A list of model summaries obtained from bootstrapping.}
+  \item{bootstrap_results}{A list of model summaries or Anova tables obtained from bootstrapping.}
 
-\item{max_iterations}{An integer specifying the maximum number of iterations allowed in the function. This helps in preventing infinite recursion. Default is set to 10000.}
+  \item{max_iterations}{An integer specifying the maximum number of iterations allowed in the function. This helps in preventing infinite recursion. Default is set to 10000.}
 }
 \value{
-A list containing two matrices: 'averages' with the average values of the coefficients and 'standard_errors' with the standard errors of the coefficients.
+A list containing two matrices:
+\itemize{
+  \item \code{averages}: the average values of the coefficients or test statistics
+  \item \code{standard_errors}: the corresponding standard errors for each value
 }
-\description{
-This function calculates the averages and standard errors of coefficients from the results of bootstrapped models.
 }
 \examples{
 \dontrun{
+# For bootstrapped model summaries
 data <- data.frame(y = rnorm(100), x = rnorm(100))
 results <- bootstrap_lm(data, y ~ x, 100)
+avg_se <- averages(results$bootstrap_results)
+
+# For bootstrapped Anova results
+results <- list()
+for (i in 1:1000) {
+  model <- glm(y ~ x1 * x2, data = some_data, family = binomial)
+  results[[i]] <- car::Anova(model, type = 2)
+}
 avg_se <- averages(results)
 }
 }
+\author{
+Your Name
+}
+\keyword{models}
+\keyword{bootstrap}
+\keyword{statistics}
